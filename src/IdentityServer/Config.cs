@@ -10,7 +10,7 @@ namespace IdentityServer
     public static class Config
     {
         public static IEnumerable<IdentityResource> IdentityResources =>
-            new IdentityResource[] {new IdentityResources.OpenId(), new IdentityResources.Profile(),};
+            new IdentityResource[] {new IdentityResources.OpenId(), new IdentityResources.Profile(), new IdentityResources.Email()};
 
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[] {new ApiScope("api", "API"),};
@@ -21,7 +21,8 @@ namespace IdentityServer
             {
                 new ApiResource("api", "API")
                 {
-                    Scopes = { "api" }
+                    Scopes = { "api"},
+                    UserClaims = new [] {"name", "email"}
                 },
             };
         }
@@ -40,7 +41,7 @@ namespace IdentityServer
                     RequireClientSecret = false,
                     RedirectUris = {"https://localhost:5001/swagger/oauth2-redirect.html"},
                     AllowedCorsOrigins = {"https://localhost:5001"},
-                    AllowedScopes = {"openid", "profile", "api"}
+                    AllowedScopes = {"openid", "profile", "api", "email"},
                 },
             };
     }

@@ -29,7 +29,7 @@ namespace API
             {
                 new OpenApiSecurityRequirement
                 {
-                    [ oAuthScheme ] = new[] {"api", "openid", "profile"}
+                    [ oAuthScheme ] = new[] {"api", "openid", "profile", "email"}
                 }
             };
         }

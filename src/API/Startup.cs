@@ -14,6 +14,8 @@ using Microsoft.OpenApi.Models;
 
 namespace API
 {
+    using System.IdentityModel.Tokens.Jwt;
+
     public class Startup
     {
         private readonly IConfiguration _configuration;
@@ -21,6 +23,7 @@ namespace API
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -42,7 +45,7 @@ namespace API
                                 TokenUrl = new Uri("http://localhost:5002/connect/token"),
                                 Scopes = new Dictionary<string, string>
                                 {
-                                    {"api", "API"}, {"openid", "openid"}, {"profile", "profile"}
+                                    {"api", "API"}, {"openid", "openid"}, {"profile", "profile"}, {"email", "user email address"}
                                 }
                             }
                         }
