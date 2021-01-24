@@ -26,22 +26,55 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "API", Version = "v1"}); });
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo {Title = "API", Version = "v1"});
+                options.OperationFilter<AuthorizeOperationFilter>();
+                options.AddSecurityDefinition("Bearer",
+                    new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.OAuth2,
+                        Flows = new OpenApiOAuthFlows
+                        {
+                            AuthorizationCode = new OpenApiOAuthFlow
+                            {
+                                AuthorizationUrl = new Uri("http://localhost:5002/connect/authorize"),
+                                TokenUrl = new Uri("http://localhost:5002/connect/token"),
+                                Scopes = new Dictionary<string, string>
+                                {
+                                    {"api", "API"}, {"openid", "openid"}, {"profile", "profile"}
+                                }
+                            }
+                        }
+                    });
+            });
+
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "http://localhost:5002";
+                    options.Audience = "api";
+                    options.RequireHttpsMetadata = false;
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
-            }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+                options.OAuthClientId("swagger-ui");
+                options.OAuthAppName("Swagger UI");
+                options.OAuthUsePkce();
+            });
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

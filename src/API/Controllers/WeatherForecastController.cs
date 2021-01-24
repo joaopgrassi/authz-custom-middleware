@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
