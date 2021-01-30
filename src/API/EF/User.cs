@@ -17,7 +17,7 @@ namespace API.EF
 
         public string Email { get; private set; }
 
-        public List<UserPermission> Permissions { get; } = new();
+        public List<UserPermission> Permissions { get; private set; } = new();
 
         public User(Guid id, string externalId, string email)
         {
