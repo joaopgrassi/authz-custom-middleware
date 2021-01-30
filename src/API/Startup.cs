@@ -1,3 +1,4 @@
+using API.Authorization;
 using API.EF;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,8 @@ namespace API
             services.AddControllers();
             services.AddDbContext<AuthzContext>(options =>
                 options.UseSqlServer(_configuration.GetConnectionString("AuthzConnection")));
+            
+            services.AddScoped<IUserPermissionService, UserPermissionService>();
             
             services.AddSwaggerGen(options =>
             {
@@ -84,6 +87,8 @@ namespace API
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            
+            app.UseMiddleware<PermissionsMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
