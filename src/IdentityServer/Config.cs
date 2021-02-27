@@ -13,7 +13,10 @@ namespace IdentityServer
             new IdentityResource[] {new IdentityResources.OpenId(), new IdentityResources.Profile(), new IdentityResources.Email()};
 
         public static IEnumerable<ApiScope> ApiScopes =>
-            new ApiScope[] {new ApiScope("api", "API"),};
+            new ApiScope[]
+            {
+                new ApiScope("api", "API", new [] {"profile", "name", "email"}),
+            };
 
         public static IEnumerable<ApiResource> GetApiResource()
         {
@@ -21,8 +24,7 @@ namespace IdentityServer
             {
                 new ApiResource("api", "API")
                 {
-                    Scopes = { "api"},
-                    UserClaims = new [] {"name", "email"}
+                    Scopes = { "api"}
                 },
             };
         }

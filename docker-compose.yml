@@ -13,3 +13,11 @@ services:
         ACCEPT_EULA: "Y"
     networks:
       - authz-custom-network
+  authz-idsrv:
+    build:
+      context: ./src/IdentityServer
+      dockerfile: Dockerfile
+    ports:
+     - "5002:80"
+    networks:
+      - authz-custom-network
