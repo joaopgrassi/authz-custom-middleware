@@ -24,13 +24,14 @@ namespace API.Authorization
     public class UserPermissionService : IUserPermissionService
     {
         private readonly AuthzContext _dbContext;
-
+        
         public UserPermissionService(AuthzContext dbContext)
         {
             _dbContext = dbContext;
         }
         
-        public async ValueTask<ClaimsIdentity?> GetUserPermissionsIdentity(string sub, CancellationToken cancellationToken)
+        public async ValueTask<ClaimsIdentity?> GetUserPermissionsIdentity(
+            string sub, CancellationToken cancellationToken)
         {
             var userPermissions = await 
                 (from up in _dbContext.UserPermissions
@@ -40,6 +41,7 @@ namespace API.Authorization
                 select new Claim(AppClaimTypes.Permissions, perm.Name)).ToListAsync(cancellationToken);
 
             return CreatePermissionsIdentity(userPermissions);
+            
         }
         
         private static ClaimsIdentity? CreatePermissionsIdentity(IReadOnlyCollection<Claim> claimPermissions)

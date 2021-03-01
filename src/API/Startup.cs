@@ -1,19 +1,13 @@
 using API.Authorization;
 using API.EF;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using API.Configuration;
+using API.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -22,6 +16,7 @@ namespace API
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private AppSettings _appSettings = null!;
 
         public Startup(IConfiguration configuration)
         {
@@ -31,42 +26,17 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            _appSettings = _configuration.ConfigureAndGet<AppSettings>(services, AppSettings.SectionName);
+
             services.AddControllers();
             services.AddDbContext<AuthzContext>(options =>
                 options.UseSqlServer(_configuration.GetConnectionString("AuthzConnection")));
-            
-            services.AddScoped<IUserPermissionService, UserPermissionService>();
-            
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo {Title = "API", Version = "v1"});
-                options.OperationFilter<AuthorizeOperationFilter>();
-                options.AddSecurityDefinition("Bearer",
-                    new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows
-                        {
-                            AuthorizationCode = new OpenApiOAuthFlow
-                            {
-                                AuthorizationUrl = new Uri("http://localhost:5002/connect/authorize"),
-                                TokenUrl = new Uri("http://localhost:5002/connect/token"),
-                                Scopes = new Dictionary<string, string>
-                                {
-                                    {"api", "API"}, {"openid", "openid"}, {"profile", "profile"}, {"email", "user email address"}
-                                }
-                            }
-                        }
-                    });
-            });
 
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.Authority = "http://localhost:5002";
-                    options.Audience = "api";
-                    options.RequireHttpsMetadata = false;
-                });
+            services.AddScoped<IUserPermissionService, UserPermissionService>();
+
+            services.AddSwagger(_appSettings);
+            
+            services.AddAuthentication(_appSettings);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -78,17 +48,18 @@ namespace API
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
-                options.OAuthClientId("swagger-ui");
-                options.OAuthAppName("Swagger UI");
+                options.OAuthClientId(_appSettings.Swagger.ClientId);
+                options.OAuthAppName(_appSettings.Swagger.ClientId);
                 options.OAuthUsePkce();
             });
 
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthorization();
             
+            // order here matters - after UseAuthentication so we have the Identity populated in the HttpContext
             app.UseMiddleware<PermissionsMiddleware>();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

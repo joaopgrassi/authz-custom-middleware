@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
-
-    [Authorize]
     [ApiController]
     [Route("users")]
     public class UserController : ControllerBase

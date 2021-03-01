@@ -1,17 +1,17 @@
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace API
+namespace API.Infrastructure
 {
-    public class AuthorizeOperationFilter : IOperationFilter
+    public class SwaggerAuthorizeOperationFilter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             var hasAuthorize =
-                context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any()
+                context.MethodInfo.DeclaringType!.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any()
                 || context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any();
 
             if (!hasAuthorize)
@@ -29,7 +29,7 @@ namespace API
             {
                 new OpenApiSecurityRequirement
                 {
-                    [ oAuthScheme ] = new[] {"api", "openid", "profile", "email"}
+                    [ oAuthScheme ] = new[] {"api"}
                 }
             };
         }
