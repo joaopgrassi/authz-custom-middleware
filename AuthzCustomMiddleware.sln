@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0A4E7730-9810-4C26-9B09-B241A9E99699}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "src\IdentityServer\IdentityServer.csproj", "{97D8A0C9-A7AF-452D-9225-587095803E59}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "src\API\API.csproj", "{676E5BA0-D1B1-4E1D-A952-3234EA27FFE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthUtils", "src\AuthUtils\AuthUtils.csproj", "{FE7AD4A7-DA39-4A6A-AFF8-D6091500D415}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +23,14 @@ Global
 		{676E5BA0-D1B1-4E1D-A952-3234EA27FFE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{676E5BA0-D1B1-4E1D-A952-3234EA27FFE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{676E5BA0-D1B1-4E1D-A952-3234EA27FFE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE7AD4A7-DA39-4A6A-AFF8-D6091500D415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE7AD4A7-DA39-4A6A-AFF8-D6091500D415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE7AD4A7-DA39-4A6A-AFF8-D6091500D415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE7AD4A7-DA39-4A6A-AFF8-D6091500D415}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{97D8A0C9-A7AF-452D-9225-587095803E59} = {0A4E7730-9810-4C26-9B09-B241A9E99699}
 		{676E5BA0-D1B1-4E1D-A952-3234EA27FFE1} = {0A4E7730-9810-4C26-9B09-B241A9E99699}
+		{FE7AD4A7-DA39-4A6A-AFF8-D6091500D415} = {0A4E7730-9810-4C26-9B09-B241A9E99699}
 	EndGlobalSection
 EndGlobal

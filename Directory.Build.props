@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
     <!-- Makes all internals visible to the respective .Tests project.-->
