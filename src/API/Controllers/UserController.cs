@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using API.Controllers.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -10,7 +11,7 @@ namespace API.Controllers
         [HttpGet("me")]
         public IActionResult Get()
         {
-            return Ok(User.Claims.Select(c => new {c.Type, c.Value}));
+            return Ok(User.Claims.Select(c => new UserClaimsResponse(c.Type, c.Value)));
         }
     }
-}
+}   
