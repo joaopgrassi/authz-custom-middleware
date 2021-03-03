@@ -31,6 +31,8 @@ namespace API
             services.AddControllers();
             services.AddDbContext<AuthzContext>(options =>
                 options.UseSqlServer(_configuration.GetConnectionString("AuthzConnection")));
+            
+            services.AddHostedService<DbMigratorHostedService>();
 
             services.AddScoped<IUserPermissionService, UserPermissionService>();
 
