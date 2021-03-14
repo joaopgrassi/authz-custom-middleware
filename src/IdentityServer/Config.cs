@@ -15,7 +15,7 @@ namespace IdentityServer
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope("api", "API", new [] {"profile", "name", "email"}),
+                new ApiScope("api", "API", new [] {"profile", "name", "email", "role", "DateOfBirth"}),
             };
 
         public static IEnumerable<ApiResource> GetApiResource()

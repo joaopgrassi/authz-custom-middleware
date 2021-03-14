@@ -1,5 +1,8 @@
 using System;
+using System.IO;
 using API.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -29,6 +32,8 @@ namespace API.Infrastructure
                             }
                         }
                     });
+                var filePath = Path.Combine(AppContext.BaseDirectory, "API.xml");
+                options.IncludeXmlComments(filePath);
             });
 
             return services;
@@ -36,13 +41,32 @@ namespace API.Infrastructure
 
         public static IServiceCollection AddAuthentication(this IServiceCollection services, AppSettings appSettings)
         {
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.Authority = appSettings.IdentityServer.BaseUrl;
                     options.Audience = appSettings.IdentityServer.Audience;
                     options.RequireHttpsMetadata = appSettings.IdentityServer.RequireHttps;
+                    
+                    // need this to avoid the legacy MS claim types. Sigh*
+                    options.TokenValidationParameters.RoleClaimType = "role";
+                    options.TokenValidationParameters.NameClaimType = "name";
                 });
+            
+            services.AddAuthorization(options =>
+            {
+                // require all users to be authenticated by default
+                options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build();
+                
+                // Register our age limit policy
+                options.AddPolicy("Over18YearsOld", policy => policy.RequireAssertion(context =>
+                    context.User.HasClaim(c =>
+                        (c.Type == "DateOfBirth" && DateTime.Now.Year - DateTime.Parse(c.Value).Year >= 18)
+                    )));
+            });
+            
             return services;
         }
         
