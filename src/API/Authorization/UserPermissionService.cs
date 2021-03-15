@@ -41,7 +41,6 @@ namespace API.Authorization
                 select new Claim(AppClaimTypes.Permissions, perm.Name)).ToListAsync(cancellationToken);
 
             return CreatePermissionsIdentity(userPermissions);
-            
         }
         
         private static ClaimsIdentity? CreatePermissionsIdentity(IReadOnlyCollection<Claim> claimPermissions)
