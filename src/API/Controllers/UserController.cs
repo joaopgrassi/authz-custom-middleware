@@ -18,7 +18,7 @@ namespace API.Controllers
         /// </summary>
         [HttpGet("me")]
         [ProducesResponseType(typeof(List<UserClaimsResponse>), Status200OK)]
-        public IActionResult Get()
+        public IActionResult GetUserClaims()
         {
             return Ok(User.Claims.Select(c => new UserClaimsResponse(c.Type, c.Value)));
         }
@@ -38,7 +38,6 @@ namespace API.Controllers
         /// </summary>
         [HttpGet("cannot-buy-this")]
         [Authorize(Policy = "Over18YearsOld")] 
-        [ProducesResponseType(typeof(string), Status200OK)]
         public IActionResult GetAlhocolicBeverage()
         {
             return Ok("Bob is enjoying some whisky now!");
