@@ -2,17 +2,15 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+
 using static AuthUtils.PolicyProvider.PermissionAuthorizeAttribute;
 
 namespace AuthUtils.PolicyProvider
 {
     public class PermissionAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
     {
-        ///<inheritdoc />
         public PermissionAuthorizationPolicyProvider(IOptions<AuthorizationOptions> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
 
         /// <inheritdoc />
         public override async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
@@ -24,8 +22,8 @@ namespace AuthUtils.PolicyProvider
                 return await base.GetPolicyAsync(policyName);
             }
 
-            var @operator = GetOperatorFromPolicy(policyName);
-            var permissions = GetPermissionsFromPolicy(policyName);
+            PermissionOperator @operator = GetOperatorFromPolicy(policyName);
+            string[] permissions = GetPermissionsFromPolicy(policyName);
 
             // extract the info from the policy name and create our requirement
             var requirement = new PermissionRequirement(@operator, permissions);
