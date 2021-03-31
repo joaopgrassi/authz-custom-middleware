@@ -22,7 +22,7 @@ namespace API.Tests.Controllers
             {
                 new UserClaimsResponse("sub", "88421113"), 
                 new UserClaimsResponse("email", "bobsmith@email.com"),
-                new UserClaimsResponse("permissions", "Login")
+                new UserClaimsResponse("permissions", "Read")
             };
             
             var bob = new MockAuthUser(

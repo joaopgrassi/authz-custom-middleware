@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using API.Configuration;
+using AuthUtils.PolicyProvider;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -66,6 +67,13 @@ namespace API.Infrastructure
                         (c.Type == "DateOfBirth" && DateTime.Now.Year - DateTime.Parse(c.Value).Year >= 18)
                     )));
             });
+            
+            // Register our custom Authorization handler
+            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            
+            // Overrides the DefaultAuthorizationPolicyProvider with our own
+            // https://github.com/dotnet/aspnetcore/blob/main/src/Security/Authorization/Core/src/DefaultAuthorizationPolicyProvider.cs
+            services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
             
             return services;
         }
