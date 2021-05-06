@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using API.EF;
@@ -54,6 +55,43 @@ namespace API.Tests.Controllers
             
             // Act
             var response = await client.GetAsync("products");
+            
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+        
+                
+        [Fact]
+        public async Task Put_RequiresReadAndUpdate_UserHasOnlyReadPermission_ShouldReturn403Forbidden()
+        {
+            // Arrange
+            var user = await CreateTestUser(Permissions.Read, Permissions.Create);
+
+            var client = _factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services => services.AddScoped(_ => user));
+            }).CreateClient();
+            
+            // Act
+            var response = await client.PutAsync("products", new StringContent(string.Empty));
+            
+            // Assert
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+        
+        [Fact]
+        public async Task Put_RequiresReadAndUpdate_UserHasPermission_ShouldReturn403Forbidden()
+        {
+            // Arrange
+            var user = await CreateTestUser(Permissions.Read, Permissions.Update);
+
+            var client = _factory.WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services => services.AddScoped(_ => user));
+            }).CreateClient();
+            
+            // Act
+            var response = await client.PutAsync("products", new StringContent(string.Empty));
             
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
