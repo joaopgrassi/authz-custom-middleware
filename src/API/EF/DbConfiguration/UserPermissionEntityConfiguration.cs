@@ -12,13 +12,11 @@ namespace API.EF.DbConfiguration
 
             builder.HasOne(p => p.User)
                 .WithMany(p => p.Permissions)
-                .HasForeignKey(pt => pt.UserId)
-                .Metadata.DependentToPrincipal.SetPropertyAccessMode(PropertyAccessMode.Field);
-            
+                .HasForeignKey(pt => pt.UserId);
+
             builder.HasOne(p => p.Permission)
                 .WithMany()
-                .HasForeignKey(pt => pt.PermissionId)
-                .Metadata.DependentToPrincipal.SetPropertyAccessMode(PropertyAccessMode.Field);
+                .HasForeignKey(pt => pt.PermissionId);
         }
     }
 }

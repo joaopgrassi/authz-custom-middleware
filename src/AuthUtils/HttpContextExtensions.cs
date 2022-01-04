@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using static Microsoft.AspNetCore.Http.StatusCodes;
@@ -11,7 +12,8 @@ namespace AuthUtils
     {
         private static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
         {
-            IgnoreNullValues = true, PropertyNameCaseInsensitive = true
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNameCaseInsensitive = true
         };
         
         public static async ValueTask WriteAccessDeniedResponse(

@@ -2,9 +2,9 @@ namespace API.Controllers.Models
 {
     public class UserClaimsResponse
     {
-        public string Type { get; set; }
+        public string Type { get; set; } = null!;
 
-        public string Value { get; set; }
+        public string Value { get; set; } = null!;
 
         public UserClaimsResponse() { }
 
