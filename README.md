@@ -31,5 +31,5 @@ If all worked you should see the Swagger page and should be able to authenticate
 
 ### Requisites
 
-- .NET SDK 5.*
+- .NET SDK 6.*
 - Docker/Compose (only if you want to run the app locally)
